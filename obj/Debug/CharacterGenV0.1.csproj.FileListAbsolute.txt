@@ -1,0 +1,6 @@
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\bin\Debug\CharacterGenV0.1.exe.config
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\bin\Debug\CharacterGenV0.1.exe
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\bin\Debug\CharacterGenV0.1.pdb
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\obj\Debug\CharacterGenV0.1.csprojResolveAssemblyReference.cache
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\obj\Debug\CharacterGenV0.1.exe
+c:\users\playtech\documents\visual studio 2013\Projects\CharacterGenV0.1\CharacterGenV0.1\obj\Debug\CharacterGenV0.1.pdb
