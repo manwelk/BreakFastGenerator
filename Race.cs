@@ -8,11 +8,17 @@ namespace CharacterGenV0._1
 {
     public class Race
     {
-        protected string name = "";
+        protected string name;
         protected int speed, numOfLang;
         protected Dictionary<string, int> statMod;
-        protected Boolean hasSubRace;
+        protected Boolean subRace;
         protected List<Trait> raceTraits;
+
+        public Race() 
+        {
+            initStatMod();
+        }
+
 
         public int getSpeed() { return this.speed; }
 
@@ -35,12 +41,15 @@ namespace CharacterGenV0._1
 
         public Dictionary<string, int> getStatMod() { return statMod; }
 
+        public Boolean hasSubRace() { return this.subRace; }
+        public virtual string[] subRaces() { return null; }
+        public virtual Race createSubRace(string race) { return null; }
         public override string ToString()
         {
             //string info = "Stats Modifiers: ";
             //foreach (var mod in statMod) { info += " " + statMod; }
             //return info;
-            return name;
+            return this.name;
         }
     }
 }

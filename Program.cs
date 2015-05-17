@@ -1,54 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CharacterGenV0._1
 {
     public class Program
     {
         //static string version = "v0.1";
-        static Character CHARACTER;
-
+        private static Character CHARACTER;
+        private static int hor = 25, vert = 10; //vertical and horizontal spacing for the menus
+        private static ConsoleColor back = ConsoleColor.Black, fore = ConsoleColor.White, //colors for the menus
+            defaultBack = ConsoleColor.Black, defaultFore = ConsoleColor.White; //colors for the background and foreground(font)
 
 
 
         static void Main(string[] args)
         {
+           
             splash();
-            
-            //testMethod();
-            
             startMenu();
-            Console.ReadKey();
-
+           
         }
-
-        static void testMethod()
+        //debug stuff goes here
+        private static void debug()
         {
-            Character test = new Character();
-            foreach (var stat in test.getStats())
+            while (true)
             {
-                Console.WriteLine(stat);
+                splash();
+                CHARACTER = new Character("test character");
+                Race dwa = new Hill_Dwarf(); CHARACTER.setRace(dwa);
+                //rollForStats();
+                //inputStats();
+                //chooseRace();
+                splash();
+                foreach (var stat in CHARACTER.getStats())
+                {
+                    Console.WriteLine(stat);
+                }
+                Console.WriteLine(CHARACTER.getRace().ToString());
+                foreach (var mod in CHARACTER.getRace().getStatMod())
+                {
+                    Console.WriteLine(mod);
+                }
+                Console.WriteLine("Quit y/n?: ");
+                if (Console.ReadLine().Equals("y") || Console.ReadLine().Equals("Y")) { break; }
             }
-            
-            Console.ReadKey();
-            test.setStat("Strength", 8);
-            foreach (var stat in test.getStats())
-            {
-                Console.WriteLine(stat);
-            }
-            Console.ReadKey();
-            int[] rolledStats = test.rollForStats();
-            Console.ReadKey();
-            foreach(int i in rolledStats) {Console.WriteLine(i);}
         }
 
-
+        // clears screen and displays title
         static void splash() 
         {
-            Console.BackgroundColor = ConsoleColor.Black; Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = defaultBack; Console.ForegroundColor = defaultFore;
             Console.Clear();
             Console.CursorVisible = false;
             Console.WriteLine(
@@ -67,7 +68,7 @@ namespace CharacterGenV0._1
         {
             Console.CursorVisible = false;
             string[] menuItems = { "New Character", "Load Character", "Quit" , "Debug" };
-            int choice = ConsoleMenus.ChooseListBoxItem(menuItems, 30, 8, ConsoleColor.Black, ConsoleColor.White);
+            int choice = ConsoleMenus.ChooseListBoxItem(menuItems, hor, vert, back, fore);
             if(choice == 1)
             {
                 
@@ -92,27 +93,10 @@ namespace CharacterGenV0._1
 
         }
 
-        //debug stuff goes here
-        private static void debug()
-        {
-            while (true) 
-            {
-                splash();
-                CHARACTER = new Character("test character");
-                rollForStats();
-                splash();
-                foreach (var stat in CHARACTER.getStats())
-                {
-                    Console.WriteLine(stat);
-                }
-                Console.WriteLine("Quit y/n?: ");
-                if (Console.ReadLine().Equals("y") || Console.ReadLine().Equals("Y")) { break; }
-            }
-        }
 
         private static void close()
         {
-            Console.BackgroundColor = ConsoleColor.Black; Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = defaultBack; Console.ForegroundColor = defaultFore;
             Console.Clear();
         }
 
@@ -122,20 +106,67 @@ namespace CharacterGenV0._1
             Console.Write("Please input your characters name: ");
             Console.CursorVisible = true;
             CHARACTER.setName(Console.ReadLine());
-            splash();
             createStats();
+            chooseRace();
         }
+
+        private static void chooseRace()
+        {
+            splash();
+            Console.WriteLine("Please choose your Characters Race: (Only Dwarf and Hill dwarf work, all other options will crash)");
+            string[] menuItems = { "Dwarf", "Elf", "Halfling", "Human", "Dragonborn", "Gnome", "Half-Elf", "Half-Orc", "Tiefling"};
+            int choice = ConsoleMenus.ChooseListBoxItem(menuItems, hor, vert, back, fore);
+            CHARACTER.setRace(createRace(menuItems[choice - 1]));
+            // if the chosen race has a subrace another menu will appear asking for another race choice
+            if (CHARACTER.getRace().hasSubRace())
+            {
+                splash();
+                Console.WriteLine("Please choose your subrace: ");
+                string[] subRaces = CHARACTER.getRace().subRaces();
+                int secondChoice = ConsoleMenus.ChooseListBoxItem(subRaces, hor, vert, back, fore);
+                CHARACTER.setRace(CHARACTER.getRace().createSubRace(subRaces[secondChoice - 1]));
+            }
+        }
+
+        // sets the characeters race to the inputed race
+        private static Race createRace(string race)
+        {
+            Race chaRace = new Race();
+            if (race.Equals("Dwarf")) 
+            {
+                chaRace = new Dwarf(); 
+            }
+            else if (race.Equals("Elf")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Halfling")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Human")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Dragonborn")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Gnome")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Half-Elf")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Half-Orc")) { throw new Exception("Not yet implemented"); }
+            else if (race.Equals("Tiefling")) { throw new Exception("Not yet implemented"); }
+            return chaRace;
+        }
+
 
         static void createStats() 
         {
-            
+            splash();
             //Console.Write(new string(' ', 10));
             Console.WriteLine("Please choose your Stat Distribution: ");
             string[] menuItems = {"Standard Matrix (15, 14, 13, 12, 10, 8)", "Roll 4d6 and keep highest 3", "Input your own values"};
-            int choice = ConsoleMenus.ChooseListBoxItem(menuItems ,25, 10, ConsoleColor.Black, ConsoleColor.White);
-            if(choice == 1){ standardMatrix(); }
-            else if (choice == 2) { rollForStats(); }
-            else if (choice == 3) { inputStats(); }
+            int choice = ConsoleMenus.ChooseListBoxItem(menuItems, hor, vert, back, fore);
+            if(choice == 1)
+            { 
+                standardMatrix(); 
+            }
+            else if (choice == 2) 
+            { 
+                rollForStats(); 
+            }
+            else if (choice == 3) 
+            { 
+                inputStats(); 
+            }
 
         }
 
@@ -157,7 +188,7 @@ namespace CharacterGenV0._1
         static string[] statSelectMenu(string stat, string[] statValues)
         {
             Console.WriteLine(new string(' ', 20 - stat.Length) + "For {0}:", stat);
-            int choice = ConsoleMenus.ChooseListBoxItem(statValues, 25, 10, ConsoleColor.Black, ConsoleColor.White);
+            int choice = ConsoleMenus.ChooseListBoxItem(statValues, hor, vert, back, fore);
             CHARACTER.setStat(stat, Int32.Parse(statValues[choice - 1]));
             splash();
             return statValues.Except(new string[] { statValues[choice - 1] }).ToArray();
@@ -173,7 +204,7 @@ namespace CharacterGenV0._1
             {
                 stringStatValues[i] = statValues[i].ToString();
             }
-            int choice = ConsoleMenus.ChooseListBoxItem(stringStatValues, 25, 10, ConsoleColor.Black, ConsoleColor.White);
+            int choice = ConsoleMenus.ChooseListBoxItem(stringStatValues, hor, vert, back, fore);
             CHARACTER.setStat(stat, statValues[choice - 1]);
 
             int[] newStatValues = new int[statValues.Length];
@@ -192,7 +223,6 @@ namespace CharacterGenV0._1
             Array.Reverse(newStatValues); //reverses that order
             Array.Resize<int>(ref newStatValues, statValues.Length-1); // resizes array and loses last value which should be the selected one from earlier
             return newStatValues;
-            //return statValues.Except(new int[] { statValues[choice - 1] }).ToArray();
 
         }
 
@@ -200,7 +230,7 @@ namespace CharacterGenV0._1
         {
             splash();
             int [] stats = CHARACTER.rollForStats();
-            Console.WriteLine("Your rolled stats are: {0}, {1}, {2}, {3}, {4}, {5}", stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]);
+            Console.WriteLine("Your rolled values are: {0}, {1}, {2}, {3}, {4}, {5}", stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]);
             Console.CursorVisible = true;
             while(true)
             {
@@ -209,7 +239,7 @@ namespace CharacterGenV0._1
                 if (input.Equals("y")||input.Equals("Y"))
                 {
                     rollForStats();
-                    
+                    break;
                 }
                 else if (input.Equals("n") || input.Equals("N"))
                 {
@@ -225,8 +255,30 @@ namespace CharacterGenV0._1
             
         }
         static void inputStats() 
-        { 
+        {
+            splash();
+            addStat("Strength");
+            addStat("Dexterity");
+            addStat("Constitution");
+            addStat("Intelligence");
+            addStat("Wisdom");
+            addStat("Charisma");
 
+        }
+
+        private static void addStat(string stat)
+        {
+            Console.CursorVisible = true;
+            Console.Write("Please input the value for {0}: ", stat);
+            try
+            {
+                CHARACTER.setStat(stat, Int32.Parse(Console.ReadLine()));
+                splash();
+            }
+            catch (Exception e) 
+            {
+                addStat(stat);
+            }
         }
 
         static void loadCharacter() 

@@ -10,9 +10,9 @@ namespace CharacterGenV0._1
     {
         public Dwarf() 
         {
-            base.hasSubRace = true; base.speed = 30; base.numOfLang = 2; 
+            base.name = "Dwarf";
+            base.subRace = true; base.speed = 30; base.numOfLang = 2; 
             base.raceTraits = new List<Trait>();
-            base.initStatMod();
             addTraits();
         }
         private void addTraits()
@@ -23,8 +23,26 @@ namespace CharacterGenV0._1
             raceTraits.Add(new Trait("Tool Proficiency"));
             raceTraits.Add(new Trait("Stonecunning", "Whenever you make an History check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check."));
         }
-        
-        
+
+        public override string[] subRaces() 
+        {
+            string[] races = { "Hill Dwarf" , "Mountain Dwarf" };
+            return races; 
+        }
+
+        public override Race createSubRace(string race) 
+        {
+            Race sub = new Race();
+            if (race.Equals("Hill Dwarf"))
+            {
+                sub = new Hill_Dwarf();
+            }
+            else if (race.Equals("Mountain Dwarf"))
+            {
+                throw new Exception("Not yet implemented");
+            }
+            return sub; 
+        }
 
         public List<Trait> getTraits() { return raceTraits; }
     }
